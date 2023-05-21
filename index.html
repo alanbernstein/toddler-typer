@@ -155,21 +155,22 @@
             "t": "tuh",
         }
 
-        words = words_letters;
+        words = words_names;
 
         if('speechSynthesis' in window) {
             // Speech Synthesis supported 🎉
             var msg = new SpeechSynthesisUtterance();
             msg.text = "Hello miss Dana";
 
+            /*
             voices = speechSynthesis.getVoices()
-            //msg.voice = voices[6];
+            msg.voice = voices[6];
             voices.forEach(function(voice) {
                 console.log(voice.name, voice.default ? voice.default :'');
             });
+            */
 
             window.speechSynthesis.speak(msg);
-
         } else{
             // Speech Synthesis Not Supported 😣
             console.log("no");
