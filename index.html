@@ -1,25 +1,28 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <style type="text/css"> 
+    <style type="text/css">
         body {
             background-color: #000;
             font-family: Arial, Helvetica, sans-serif;
         }
-        html,body {
-            height:100%;
-        }
         #parent {
+            width: 80%;
+            min-height: 300px;
+            padding: 5px;
             display: flex;
-            align-items: center;
             justify-content: center;
-            height: 100%;
-            //border: 2px solid green;
+            align-items: center;
+
+            /* position the div in center */
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
         }
-        #prompt-word {
+        #word {
             font-size: 10vw;
             text-transform: uppercase;
-            //border: 2px solid red;
         }
         #left-letters {
             color: #222;
@@ -37,10 +40,10 @@
     </style>
     <script src="confetti.js"></script>
 </head>
-<body>
+<body onload="init();">
 
     <div id="parent">
-        <div id="prompt-word">
+        <div id="word">
             <span id="left-letters"></span>
             <span id="current-letter">c</span>
             <span id="right-letters">at</span>
@@ -61,6 +64,10 @@
             "fiona",
             "ranger",
             "bernstein",
+            "steve",
+            "rachel",
+            "robert",
+            "jeff",
             "mclemore",
             "mommy",
             "daddy",
@@ -71,7 +78,7 @@
             "grandma",
             "grandpa",
             "grammy",
-            "paw-paw",
+            "pawpaw",
             "annalise",
             "clayton",
             "teagan",
@@ -179,7 +186,7 @@
         function newWord() {
             var word = words[Math.floor(Math.random()*words.length)];
 
-            var elLeft = document.getElementById("left-letters"); 
+            var elLeft = document.getElementById("left-letters");
             var elCurrent = document.getElementById("current-letter");
             var elRight = document.getElementById("right-letters");
 
@@ -190,41 +197,44 @@
         }
 
         newWord();
-        document.addEventListener('keypress', (event) => {
-            var name = event.key;
-            var code = event.code;
-    
-            var elLeft = document.getElementById("left-letters"); 
-            var elCurrent = document.getElementById("current-letter");
-            var elRight = document.getElementById("right-letters");
 
-            // handle correct keypress
-            if(name == elCurrent.innerHTML) {
-                console.log(`correct ${name}`);
-                var msg = new SpeechSynthesisUtterance();
-                msg.text = name;
-                window.speechSynthesis.speak(msg)
+        function init() {
+            document.addEventListener('keypress', (event) => {
+                var name = event.key;
+                var code = event.code;
 
-                elLeft.innerHTML += elCurrent.innerHTML;
-                if(elRight.innerHTML.length == 0) {
-                    elCurrent.innerHTML = "";
-                    elLeft.classList.add("success");
+                var elLeft = document.getElementById("left-letters");
+                var elCurrent = document.getElementById("current-letter");
+                var elRight = document.getElementById("right-letters");
 
-                    startConfetti();
+                // handle correct keypress
+                if(name == elCurrent.innerHTML) {
+                    console.log(`correct ${name}`);
                     var msg = new SpeechSynthesisUtterance();
-                    msg.text = elLeft.innerHTML;
+                    msg.text = name;
                     window.speechSynthesis.speak(msg)
-                    setTimeout(stopConfetti, 500);
-                    setTimeout(newWord, 2000);
-                    return;
-                }
-                elCurrent.innerHTML = elRight.innerHTML[0];
-                elRight.innerHTML = elRight.innerHTML.substring(1);
-            } else {
-                console.log(`incorrect ${name}`);
-            }
 
-        }, false);
+                    elLeft.innerHTML += elCurrent.innerHTML;
+                    if(elRight.innerHTML.length == 0) {
+                        elCurrent.innerHTML = "";
+                        elLeft.classList.add("success");
+
+                        startConfetti();
+                        var msg = new SpeechSynthesisUtterance();
+                        msg.text = elLeft.innerHTML;
+                        window.speechSynthesis.speak(msg)
+                        setTimeout(stopConfetti, 500);
+                        setTimeout(newWord, 2000);
+                        return;
+                    }
+                    elCurrent.innerHTML = elRight.innerHTML[0];
+                    elRight.innerHTML = elRight.innerHTML.substring(1);
+                } else {
+                    console.log(`incorrect ${name}`);
+                }
+
+            }, false);
+        }
     </script>
 </body>
 </html>
