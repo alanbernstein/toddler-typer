@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style type="text/css"> 
+        body {
+            background-color: #000;
+            font-family: Arial, Helvetica, sans-serif;
+        }
+        html,body {
+            height:100%;
+        }
+        #parent {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            //border: 2px solid green;
+        }
+        #prompt-word {
+            font-size: 10vw;
+            text-transform: uppercase;
+            //border: 2px solid red;
+        }
+        #left-letters {
+            color: #222;
+        }
+        #current-letter {
+            color: #fff;
+            font-size: 12vw;
+        }
+        #right-letters {
+            color: #fff;
+        }
+        .success {
+            color: #0f0 !important;
+        }
+    </style>
+    <script src="confetti.js"></script>
+</head>
+<body>
+
+    <div id="parent">
+        <div id="prompt-word">
+            <span id="left-letters"></span>
+            <span id="current-letter">c</span>
+            <span id="right-letters">at</span>
+        </div>
+    </div>
+
+    <script type="text/javascript">
+        words_letters = [
+            "aaaaaaaaaa",
+            "bbbbbbbbbb",
+            "cccccccccc",
+        ]
+        words_names = [
+            "alan",
+            "lisa",
+            "dana",
+            "gizmo",
+            "fiona",
+            "ranger",
+            "bernstein",
+            "mclemore",
+            "mommy",
+            "daddy",
+            "sister",
+            "father",
+            "mother",
+            "daughter",
+            "grandma",
+            "grandpa",
+            "grammy",
+            "paw-paw",
+            "annalise",
+            "clayton",
+            "teagan",
+            "asher",
+            "ezra",
+            "quentin",
+        ];
+
+        words_nouns = [
+            "dog",
+            "cat",
+            "pig",
+            "cow",
+        ];
+
+        words_other = [
+            "run",
+            "go",
+            "come",
+            "went",
+            "up",
+            "you",
+            "day",
+            "was",
+            "look",
+            "are",
+            "the",
+            "of",
+            "we",
+            "this",
+            "me",
+            "like",
+            "going",
+            "big",
+            "she",
+            "and",
+            "they",
+            "my",
+            "see",
+            "on",
+            "away",
+            "mum",
+            "it",
+            "at",
+            "play",
+            "no",
+            "yes",
+            "for",
+            "dad",
+            "can",
+            "he",
+            "am",
+            "all",
+            "is",
+            "get",
+            "said",
+            "to",
+            "in",
+        ];
+
+        letter_sounds = {
+            "a": "ah",
+            "b": "buh",
+            "c": "cuh",
+            "d": "duh",
+            "e": "eh",
+            "f": "fuh",
+            "g": "guh",
+            "h": "huh",
+            "i": "ih",
+            "j": "juh",
+            "k": "kuh",
+            "l": "llll",
+            "m": "mmmm",
+            "n": "nnnn",
+            "o": "oh",
+            "p": "puh",
+            "q": "quah",
+            "r": "rrr",
+            "s": "sss",
+            "t": "tuh",
+        }
+
+        words = words_letters;
+
+        if('speechSynthesis' in window) {
+            // Speech Synthesis supported 🎉
+            var msg = new SpeechSynthesisUtterance();
+            msg.text = "Hello miss Dana";
+
+            voices = speechSynthesis.getVoices()
+            //msg.voice = voices[6];
+            voices.forEach(function(voice) {
+                console.log(voice.name, voice.default ? voice.default :'');
+            });
+
+            window.speechSynthesis.speak(msg);
+
+        } else{
+            // Speech Synthesis Not Supported 😣
+            console.log("no");
+        }
+
+        function newWord() {
+            var word = words[Math.floor(Math.random()*words.length)];
+
+            var elLeft = document.getElementById("left-letters"); 
+            var elCurrent = document.getElementById("current-letter");
+            var elRight = document.getElementById("right-letters");
+
+            elLeft.classList.remove("success");
+            elLeft.innerHTML = "";
+            elCurrent.innerHTML = word[0];
+            elRight.innerHTML = word.substring(1);
+        }
+
+        newWord();
+        document.addEventListener('keypress', (event) => {
+            var name = event.key;
+            var code = event.code;
+    
+            var elLeft = document.getElementById("left-letters"); 
+            var elCurrent = document.getElementById("current-letter");
+            var elRight = document.getElementById("right-letters");
+
+            // handle correct keypress
+            if(name == elCurrent.innerHTML) {
+                console.log(`correct ${name}`);
+                var msg = new SpeechSynthesisUtterance();
+                msg.text = name;
+                window.speechSynthesis.speak(msg)
+
+                elLeft.innerHTML += elCurrent.innerHTML;
+                if(elRight.innerHTML.length == 0) {
+                    elCurrent.innerHTML = "";
+                    elLeft.classList.add("success");
+
+                    startConfetti();
+                    var msg = new SpeechSynthesisUtterance();
+                    msg.text = elLeft.innerHTML;
+                    window.speechSynthesis.speak(msg)
+                    setTimeout(stopConfetti, 500);
+                    setTimeout(newWord, 2000);
+                    return;
+                }
+                elCurrent.innerHTML = elRight.innerHTML[0];
+                elRight.innerHTML = elRight.innerHTML.substring(1);
+            } else {
+                console.log(`incorrect ${name}`);
+            }
+
+        }, false);
+    </script>
+</body>
+</html>
