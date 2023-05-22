@@ -28,12 +28,19 @@
             color: #222;
         }
         #current-letter {
-            color: #fff;
+            color: #afa;
             font-size: 12vw;
+            animation: breath 2s infinite;
         }
         #right-letters {
             color: #fff;
         }
+        @keyframes breath {
+            0% {font-size: 12vw;}
+            50% {font-size: 14vw;}
+            100% {font-size: 12vw;}
+        }
+
         .success {
             color: #0f0 !important;
         }
