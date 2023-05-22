@@ -44,6 +44,90 @@
         .success {
             color: #0f0 !important;
         }
+
+        body * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+        .keyboard-base {
+            max-width: 650px;
+            padding: 20px;
+            position: absolute;
+            bottom: 0%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: rgb(197, 197, 197);
+            border-radius: 10px;
+            display: grid;
+            grid-template-columns: repeat(30, 15px);
+            grid-template-rows: repeat(5, 30px);
+            grid-gap: 5px;
+        }
+
+        .key {
+            background-color: rgb(243, 243, 243);
+            border: 2px solid black;
+            border-radius: 5px;
+            grid-column: span 2;
+            font-size: 12px;
+            text-align: center;
+            padding-top: 9px;
+        }
+
+        .key-highlight {
+            background-color: #afa;
+        }
+
+        .key:hover {
+          //border: 1px solid #eeeeee;
+
+        }
+
+        .delete {
+            grid-column: span 4;
+        }
+
+        .tab {
+            grid-column: span 3;
+        }
+
+        .backslash {
+            grid-column: span 3;
+        }
+
+        .capslock {
+            grid-column: span 4;
+        }
+
+        .return {
+            grid-column: span 4;
+        }
+
+        .leftshift {
+            grid-column: span 5;
+        }
+
+        .rightshift {
+            grid-column: span 5;
+        }
+
+        .leftctrl {
+            grid-column: span 3;
+        }
+
+        .command {
+            grid-column: span 3;
+            font-size: 14px;
+        }
+
+        .space {
+            grid-column: span 13;
+        }
+
+
     </style>
     <script src="confetti.js"></script>
 </head>
@@ -56,6 +140,75 @@
             <span id="right-letters">at</span>
         </div>
     </div>
+
+    <div class="keyboard-base">
+        <div class="key">~</div>
+        <div class="key">1</div>
+        <div class="key">2</div>
+        <div class="key">3</div>
+        <div class="key">4</div>
+        <div class="key">5</div>
+        <div class="key">6</div>
+        <div class="key">7</div>
+        <div class="key">8</div>
+        <div class="key">9</div>
+        <div class="key">0</div>
+        <div class="key">-</div>
+        <div class="key">+</div>
+        <div class="key delete">Delete</div>
+
+        <div class="key tab">Tab</div>
+        <div class="key" id="key-q">Q</div>
+        <div class="key" id="key-w">W</div>
+        <div class="key" id="key-e">E</div>
+        <div class="key" id="key-r">R</div>
+        <div class="key" id="key-t">T</div>
+        <div class="key" id="key-y">Y</div>
+        <div class="key" id="key-u">U</div>
+        <div class="key" id="key-i">I</div>
+        <div class="key" id="key-o">O</div>
+        <div class="key" id="key-p">P</div>
+        <div class="key">[</div>
+        <div class="key">]</div>
+        <div class="key backslash">\</div>
+
+        <div class="key capslock">CapsLock</div>
+        <div class="key" id="key-a">A</div>
+        <div class="key" id="key-s">S</div>
+        <div class="key" id="key-d">D</div>
+        <div class="key" id="key-f">F</div>
+        <div class="key" id="key-g">G</div>
+        <div class="key" id="key-h">H</div>
+        <div class="key" id="key-j">J</div>
+        <div class="key" id="key-k">K</div>
+        <div class="key" id="key-l">L</div>
+        <div class="key">;</div>
+        <div class="key">'</div>
+        <div class="key return">Return</div>
+
+        <div class="key leftshift">Shift</div>
+        <div class="key" id="key-z">Z</div>
+        <div class="key" id="key-x">X</div>
+        <div class="key" id="key-c">C</div>
+        <div class="key" id="key-v">V</div>
+        <div class="key" id="key-b">B</div>
+        <div class="key" id="key-n">N</div>
+        <div class="key" id="key-m">M</div>
+        <div class="key">,</div>
+        <div class="key">.</div>
+        <div class="key">/</div>
+        <div class="key rightshift">Shift</div>
+
+        <div class="key leftctrl">Ctrl</div>
+        <div class="key">Alt</div>
+        <div class="key command">⌘</div>
+        <div class="key space">Space</div>
+        <div class="key command">⌘</div>
+        <div class="key">Alt</div>
+        <div class="key">Ctrl</div>
+        <div class="key">Fn</div>
+    </div>
+
 
     <script type="text/javascript">
         words_letters = [
@@ -86,6 +239,9 @@
             "grandpa",
             "grammy",
             "pawpaw",
+            "cousin",
+            "uncle",
+            "aunt",
             "annalise",
             "clayton",
             "teagan",
@@ -201,6 +357,12 @@
             elLeft.innerHTML = "";
             elCurrent.innerHTML = word[0];
             elRight.innerHTML = word.substring(1);
+
+            // update keyboard highlight
+            var elsHighlighted = document.getElementsByClassName("key-highlight");
+            Array.from(elsHighlighted).forEach(x => x.classList.remove("key-highlight"));
+            var elHighlightKey = document.getElementById("key-" + word[0]);
+            elHighlightKey.classList.add("key-highlight");
         }
 
         newWord();
@@ -222,6 +384,8 @@
                     window.speechSynthesis.speak(msg)
 
                     elLeft.innerHTML += elCurrent.innerHTML;
+
+                    // handle complete word
                     if(elRight.innerHTML.length == 0) {
                         elCurrent.innerHTML = "";
                         elLeft.classList.add("success");
@@ -236,6 +400,13 @@
                     }
                     elCurrent.innerHTML = elRight.innerHTML[0];
                     elRight.innerHTML = elRight.innerHTML.substring(1);
+
+                    // update keyboard highlight
+                    var elsHighlighted = document.getElementsByClassName("key-highlight");
+                    Array.from(elsHighlighted).forEach(x => x.classList.remove("key-highlight"));
+                    var elHighlight = document.getElementById("key-" + elCurrent.innerHTML);
+                    elHighlight.classList.add("key-highlight");
+
                 } else {
                     console.log(`incorrect ${name}`);
                 }
